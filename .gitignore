@@ -1,0 +1,8 @@
+*.sfc
+*.smc
+*.deb
+split/
+linked.txt
+*.o
+__pycache__
+tools/outputs

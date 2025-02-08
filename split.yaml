@@ -1,0 +1,39 @@
+name: Mario is Missing!
+suffix: .sfc
+md5: 2a2152976e503eaacd9815f44c262d73
+options:
+  banks: 32
+  bank_size: 0x8000
+splits:
+  - bank: 0
+  - bank: 1
+  - bank: 2
+  - bank: 3
+  - bank: 4
+  - bank: 5
+  - bank: 6
+  - bank: 7
+  - bank: 8
+  - bank: 9
+  - bank: 0xA
+  - bank: 0xB
+  - bank: 0xC
+  - bank: 0xD
+  - bank: 0xE
+  - bank: 0xF
+  - bank: 0x10
+  - bank: 0x11
+  - bank: 0x12
+  - bank: 0x13
+  - bank: 0x14
+  - bank: 0x15
+  - bank: 0x16
+  - bank: 0x17
+  - bank: 0x18
+  - bank: 0x19
+  - bank: 0x1A
+  - bank: 0x1B
+  - bank: 0x1C
+  - bank: 0x1D
+  - bank: 0x1E
+  - bank: 0x1F

@@ -1,0 +1,5 @@
+#!/bin/bash
+rm -rf missing_rebuilt.sfc
+asar --symbols=wla --symbols-path=linked.txt src/main.asm missing_rebuilt.sfc
+echo rom made!
+python3 tools/checksum.py "$@"

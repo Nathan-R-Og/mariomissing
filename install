@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#$1 == cpu
+#$2 == syntax
+
+# Debian and derivatives (apt)
+if cat /etc/os-release | grep -E 'ID=debian|ID_LIKE=(.*)debian' &> /dev/null; then
+    echo "Installing packages for Debian or derivative (apt)"
+    sudo apt install cmake
+
+    #build asar
+    cd asar
+    cmake src && make
+    cd -
+
+fi
