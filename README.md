@@ -22,8 +22,7 @@ Still incredibly WIP!
 
 ## Notes
 
-The game uses a ton of graphics optimizations, so that will be one of my goals to figure out.
-
 Music is somewhat figured out! Still more hoops to jump through, but it's getting there!
 
-General game text uses lossless compression, using replacement. Don't know the specific algorithm and its probably tailored anyways.
+General game uses lossless compression, using replacement. Don't know the specific algorithm and its probably tailored anyways.
+Basic, un-stress tested decompression exists in `tools/uncompress.py`. Some of the that decompresses it on runtime is also disassembled.

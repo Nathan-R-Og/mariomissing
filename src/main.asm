@@ -1,5 +1,6 @@
 arch 65816
 lorom
+freespacebyte $FF
 
 incsrc "hardware.asm"
 incsrc "macros.asm"

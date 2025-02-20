@@ -23,7 +23,29 @@ splits:
   - bank: 0xF
   - bank: 0x10
   - bank: 0x11
+    splits:
+    - [0]
+    - [0x3c6a, Txt_Kenya]
+    - [0x485e, Txt_Paris]
+    - [0x53d2, Txt_London]
+    - [0x5e50]
+    - [0x5e52, titlefont_gfx]
+    - [0x6113]
   - bank: 0x12
+    splits:
+    - [0, Txt_NewYork]
+    - [0xb29, Txt_Cairo]
+    - [0x1653, Txt_Athens]
+    - [0x2164, Txt_Tokyo]
+    - [0x2C5A, Txt_Rome]
+    - [0x3720, Txt_RiodeJaneiro]
+    - [0x41Ba, Txt_SanFrancisco]
+    - [0x4c3a, Txt_Sydney]
+    - [0x56d3, Txt_Beijing]
+    - [0x6125, Txt_Moscow]
+    - [0x6b71, Txt_BuenosAires]
+    - [0x75d7, Txt_MexicoCity]
+    - [0x7eed]
   - bank: 0x13
   - bank: 0x14
   - bank: 0x15

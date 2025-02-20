@@ -1,3 +1,4 @@
 [submodule "asar"]
 	path = asar
 	url = https://github.com/RPGHacker/asar
+    ignore = dirty

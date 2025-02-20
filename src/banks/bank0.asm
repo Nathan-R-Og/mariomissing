@@ -34,7 +34,256 @@ org $008000
 
 dw 0
 
-incbin "split/banks/bank0.bin":$50..$21f0
+incbin "split/banks/bank0.bin":$50..$781
+
+d_808bb7 = $808bb7
+d_808506 = $808506
+d_808781:
+    php
+    rep #$20
+    sep #$10
+    sta $2a
+    lda [$5d]
+    sta $2c
+    ldx #$00
+    stx $2e
+    lda #$8000
+    sta $2f
+    ldx #$7f
+    stx $31
+    inc $5d
+    inc $5d
+    jsl d_808bb7
+    lda #$002a
+    sta $18
+    ldx #$00
+    stx $1a
+    jsl d_808506
+    plp
+    rtl
+
+incbin "split/banks/bank0.bin":$7b0..$c3a
+
+
+
+!5d_get_text #= $5d
+!60_get_bitmask #= $60
+!64_bytes_left #= $64
+;these routines work off of the 'header' of text blocks
+;using it as a jump table indicie
+;i think these are literally just decoding types
+d_808c3a:
+    lda (!5d_get_text)
+    dec
+    cmp #3
+    ;if a == 0
+    bcs .d_808c46
+    ;else
+    asl
+    tax
+    jmp (text_jumptable,x)
+    .d_808c46:
+    plb
+    plp
+    rtl
+
+d_808c49:
+    lda (!5d_get_text)
+    dec
+    cmp #3
+    ;if a == 0
+    bcs .d_808c55
+    ;else
+    asl
+    tax
+    jmp (text_jumptable2,x)
+    .d_808c55:
+    plb
+    plp
+    rtl
+
+text_jumptable:
+    dw $8C64
+    dw $8D78
+    dw d_808e12
+text_jumptable2:
+    dw $8C64
+    dw $8CDE
+    dw d_808e12
+
+incbin "split/banks/bank0.bin":$c64..$e12
+
+d_808e12:
+    sep #!STATUS_MEMORY
+    rep #!STATUS_INDEX
+    ;store incs
+    lda #8
+    sta !64_bytes_left
+
+    ;get first bitmask
+    ldy !5d_get_text
+    iny
+    sty !60_get_bitmask
+
+    ;set 5d start point to the start of the actual data
+    iny
+    sty !5d_get_text
+
+    ;reset
+    ldx #$0001
+    ldy #$0000
+
+    .d_808e28:
+    lda (!60_get_bitmask)
+    .d_808e2a:
+    ;shift incrementor byte to test bits
+    asl
+    ;store
+    pha
+    ;branch if incrementor_byte.$64 was 0
+    bcc .d_808e42
+
+    ;normal case
+    lda (!5d_get_text),y
+    sta !WMDATA
+    iny
+    sta $7ff000,x
+    rep #!STATUS_MEMORY
+    inx
+    txa
+    and #%0000111111111111
+    tax
+    bra .d_808e7e
+
+
+
+    ;bit was zero
+    ;is control code
+    .d_808e42:
+    rep #!STATUS_MEMORY
+
+    ;get word
+    lda (!5d_get_text),y
+
+    ;end if zero
+    beq .d_808e96
+
+    ;move 'cursor'
+    iny
+    iny
+
+    ;store y
+    phy
+
+    ;make word big endian :)
+    xba
+
+    ;store LOWBYTE(a)
+    pha
+
+    ;remove lowermost nybble
+    lsr
+    lsr
+    lsr
+    lsr
+
+    ;store into 62
+    sta $62
+
+    ;restore LOWBYTE(a)
+    pla
+
+    ;GET that lower nybble
+    and #%0000000000001111
+
+    ;+= 2
+    ;probably because if you are starting a character transplant anyways
+    ;its not worth it to do anything less :^)
+    inc
+    inc
+    ;a -> y
+    tay
+
+    ;this is definitely a loop lol
+    .loop:
+    ;load stored $62
+    lda $62
+    ;get only the actual contents
+    and #%0000111111111111
+
+    ;store
+    phx
+    ;store a in x
+    tax
+    ;inc 62
+    inc
+    sta $62
+    ;read byte from cpu memory ($7ff000 is a mirror of the written wram+1)
+    sep #!STATUS_MEMORY
+    lda $7ff000,x
+    sta !WMDATA
+    ;restore x
+    plx
+
+    ;also do the normal write
+    sta $7ff000,x
+
+    rep #!STATUS_MEMORY
+
+    ;x++
+    inx
+
+    ;clean x
+    txa
+    and #%0000111111111111
+    tax
+
+    ;i--
+    dey
+    bne .loop
+
+    ply
+
+    .d_808e7e:
+    sep #!STATUS_MEMORY
+    pla
+    ;[$64] > 0, jump
+    dec !64_bytes_left
+    bne .d_808e2a
+    ;else
+
+    ;set new length???
+    lda #8
+    sta !64_bytes_left
+
+    rep #!STATUS_MEMORY
+    clc
+
+    ;y is wram addr
+    tya
+    ;$5d+y = $60
+    ;$60 becomes current??????
+    adc !5d_get_text
+    sta !60_get_bitmask
+
+    sep #!STATUS_MEMORY
+
+    ;inc y to move one past $60 (skip a byte)
+    iny
+    ;loop
+    bra .d_808e28
+
+    ;end
+    .d_808e96:
+    sep #!STATUS_MEMORY
+    pla
+    plb
+    plp
+    rtl
+
+
+
+incbin "split/banks/bank0.bin":$e9c..$21f0
 
 ;system
 db "Where am I?",0

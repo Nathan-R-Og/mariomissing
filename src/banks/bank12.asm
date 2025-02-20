@@ -1,30 +1,38 @@
+;this may be more than JUST text but for now.
+;technically this can just straight up optimize binary????????????????????
+
 org $128000
-incbin "split/banks/bank12.bin":0..$41ba
+incbin "split/banks/Txt_NewYork.bin"
+incbin "split/banks/Txt_Cairo.bin"
+incbin "split/banks/Txt_Athens.bin"
+incbin "split/banks/Txt_Tokyo.bin"
+incbin "split/banks/Txt_Rome.bin"
+incbin "split/banks/Txt_RiodeJaneiro.bin"
 
-db $03,$FF,$16,$6C,$36,$6D,$31,$6E,$AE,$6F,$FF,$BA,$71,$D4,$73,$86,$75,$0C,$77,$FF,$AE,$78,$A6,$7A,$44,$7C,$25,$6C,$FF,$3D,$6C,$C0,$08,$80,$0C,$03,$5E,$FF,$6C,$9E,$6C,$FB,$6C,$53
+;put in work ram $16c00
+;$7ff000 in cpu memory is used as a $1000 range buffer
+;id call it the 'working' area but. yeah
 
-;$02,$90
-;length, addr?
-;everything else that isnt a letter is a marker??
-;or at least. something like that
-;is it id'd, and THAT id is the addr????
+;$FF after every 8 bytes?
+;bitmasks for control codes??? for some reason???
+;if a bit is 0, a control code is there in place of a normal byte
+;else, just read the byte there
 
-;this is ENTIRELY a guess. all i know is that the result is lsr'd 4 times (>>4)
-macro Append(arg, arg2)
-;arg is where to go
-;arg2 is y???
-	db HIBYTE(<arg><<4),LOBYTE(<arg><<4)|<arg2>
+;control codes are formatted 'big endian' per se
+;3 nybbles worth of offset
+;1 nybble of amount to copy paste
+;ooooooooooooaaaa
+;offset is specifically of the CALCULATED output
+;
+
+
+macro Append(offset, amount)
+	db HIBYTE((<offset>+1)<<4),LOBYTE((<offset>+1)<<4)|(<amount>-2)
 endmacro
 
-Text_Start:
-db "th",$FF,"e Golden",$6F
-%Append($2A, 0)
-db "at"
-%Append($29, 0)
-db "Brid",$E7,"ge",0
-%Append($26, $F)
-%Append($37, 4)
-db " fo",$FF,"g horn",0
-
-
-incbin "split/banks/bank12.bin":$420f..$8000
+incbin "split/banks/Txt_SanFrancisco.bin"
+incbin "split/banks/Txt_Sydney.bin"
+incbin "split/banks/Txt_Beijing.bin"
+incbin "split/banks/Txt_Moscow.bin"
+incbin "split/banks/Txt_BuenosAires.bin"
+incbin "split/banks/Txt_MexicoCity.bin"
